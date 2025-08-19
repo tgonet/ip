@@ -11,8 +11,13 @@ public class Task {
         this.marked = !this.marked;
     }
 
+    public Boolean getMarked() {
+        return this.marked;
+    }
+
     @Override
     public String toString() {
-        return "[" + (this.marked ? "X" : "") + "]" + this.name;
+        String val = this.marked ? "X" : " ";
+        return "[" + val + "] " + this.name;
     }
 }
