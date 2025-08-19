@@ -19,37 +19,59 @@ public class Tom {
         while (true) {
             input = sc.nextLine();
             if (input.equals("bye")) {
-                System.out.println("____________________________________________________________");
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println("____________________________________________________________");
+                printRes("Bye. Hope to see you again soon!");
                 break;
             } else if (input.equals("list")) {
-                int count = 1;
-                if (ls.size() > 0) {
-                    System.out.println("____________________________________________________________");
-                    for (String i : ls) {
-                        if (i == null) {
-                            break;
-                        }
-                        System.out.println(count + ". " + i);
-                        count++;
+                viewList(ls);
+            } else if (input.startsWith("mark ")) {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                if (index >= 0 && index < ls.size()) {
+                    String task = ls.get(index);
+                    if (!task.startsWith("[X]")) {
+                        ls.set(index, "[X]" + task.substring(3));
+                        printRes("Nice! I've marked this task as done: " + ls.get(index));
                     }
-                    System.out.println("____________________________________________________________");
                 }
-                else {
-                    System.out.println("____________________________________________________________");
-                    System.out.println("You have not added anything to the list!");
-                    System.out.println("____________________________________________________________");
+            } 
+            else if (input.startsWith("unmark ")) {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                if (index >= 0 && index < ls.size()) {
+                    String task = ls.get(index);
+                    if (!task.startsWith("[]")) {
+                        ls.set(index, "[ ]" + task.substring(3));
+                        printRes("Nice! I've unmarked this task as done: " + ls.get(index));
+                    }
                 }
             } else {
                 if (ls.size() < 100) {
-                    ls.add(input);
-                    System.out.println("____________________________________________________________");
-                    System.out.println("added: " + input);
-                    System.out.println("____________________________________________________________");
+                    ls.add("[ ] " + input);
+                    printRes("added: " + input);
                 }
             }
-
         }
+    }
+
+    public static void viewList(ArrayList<String> ls) {
+        int count = 1;
+        if (ls.size() > 0) {
+            System.out.println("____________________________________________________________");
+            System.out.println("Here are the tasks in your list:");
+            for (String i : ls) {
+                if (i == null) {
+                    break;
+                }
+                System.out.println(count + ". " + i);
+                count++;
+            }
+            System.out.println("____________________________________________________________");
+        } else {
+            printRes("You have not added anything to the list!");
+        }
+    }
+
+    public static void printRes(String res) {
+        System.out.println("____________________________________________________________");
+        System.out.println(res);
+        System.out.println("____________________________________________________________");
     }
 }
