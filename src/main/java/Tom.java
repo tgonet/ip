@@ -30,8 +30,7 @@ public class Tom {
                     if (!task.getMarked()) {
                         task.mark();
                         printRes("Nice! I've marked this task as done: " + task.toString());
-                    }
-                    else {
+                    } else {
                         printRes("Task is already marked.");
                     }
                 }
@@ -42,34 +41,62 @@ public class Tom {
                     if (task.getMarked()) {
                         task.mark();
                         printRes("I've unmarked this task as done: " + task.toString());
-                    }
-                    else {
+                    } else {
                         printRes("Task is already unmarked.");
                     }
                 }
             } else {
                 if (ls.size() < 100) {
-                    String task = input.split(" ")[0];
-                    String[] val;
-                    switch (task) {
-                        case "deadline":
-                            val = input.substring(9).trim().split("/by", 2);
-                            ls.add(new Deadline(val[0], val[1].trim()));
-                            break;
-
-                        case "todo":
-                            ls.add(new ToDo(input.substring(5).trim()));
-                            break;
-
-                        case "event":
-                            val = input.substring(6).trim().split("/from", 2);
-                            String[] val2 = val[1].split("/to", 2);
-                            ls.add(new Events(val[0], val2[0].trim(), val2[1].trim()));
+                    try {
+                        addTask(input, ls);
+                        printRes(String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
+                                ls.get(ls.size() - 1).toString(), ls.size()));
+                    } catch (Exception e) {
+                        printRes(e.toString());
                     }
-
-                    printRes(String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list", ls.get(ls.size() -1).toString(), ls.size()));
                 }
             }
+        }
+    }
+
+    public static void addTask(String input, ArrayList<Task> ls) throws TomException {
+        String task = input.split(" ")[0];
+        String[] val;
+        String description, start, end;
+        switch (task) {
+            case "deadline":
+                if(!input.contains("/by")) {
+                    throw new TomException("Please enter in this format \"deadline [description] /by [deadline] \"");
+                }
+                val = input.substring(9).trim().split("/by", 2);
+                if (val[0].isBlank() || val[1].isBlank()) {
+                    throw new TomException("Please enter in this format \"deadline [description] /by [deadline] \"");
+                }
+                ls.add(new Deadline(val[0], val[1].trim()));
+                break;
+
+            case "todo":
+                description = input.substring(4).trim();
+                if (description.isBlank()) {
+                    throw new TomException(
+                            "You are missing a description. Enter in this format \"todo [description]\"");
+                }
+                ls.add(new ToDo(description));
+                break;
+
+            case "event":
+                val = input.substring(6).trim().split("/from", 2);
+                if(!input.contains("/from") || !input.contains("/to")) {
+                    throw new TomException("Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                }
+                String[] val2 = val[1].split("/to", 2);
+                if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
+                    throw new TomException("Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                }
+                ls.add(new Events(val[0], val2[0].trim(), val2[1].trim()));
+                break;
+            default:
+                throw new TomException("Please enter something that is under my control");
         }
     }
 
