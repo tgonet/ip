@@ -64,13 +64,6 @@ public class Tom {
                         case "event":
                             val = input.substring(6).trim().split("/from", 2);
                             String[] val2 = val[1].split("/to", 2);
-                            System.out.println(val[0]);
-                            System.out.println(val[1]);
-
-                            System.out.println(val2[0]);
-
-                            System.out.println(val2[1]);
-
                             ls.add(new Events(val[0], val2[0].trim(), val2[1].trim()));
                     }
 
