@@ -16,6 +16,7 @@ public class Tom {
         System.out.println("____________________________________________________________");
 
         String input;
+        int index;
         while (true) {
             input = sc.nextLine();
             if (input.equals("bye")) {
@@ -24,7 +25,7 @@ public class Tom {
             } else if (input.equals("list")) {
                 viewList(ls);
             } else if (input.startsWith("mark ")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                index = Integer.parseInt(input.split(" ")[1]) - 1;
                 if (index >= 0 && index < ls.size()) {
                     Task task = ls.get(index);
                     if (!task.getMarked()) {
@@ -35,7 +36,7 @@ public class Tom {
                     }
                 }
             } else if (input.startsWith("unmark ")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                index = Integer.parseInt(input.split(" ")[1]) - 1;
                 if (index >= 0 && index < ls.size()) {
                     Task task = ls.get(index);
                     if (task.getMarked()) {
@@ -44,6 +45,13 @@ public class Tom {
                     } else {
                         printRes("Task is already unmarked.");
                     }
+                }
+            } else if (input.startsWith("delete ")) {
+                index = Integer.parseInt(input.split(" ")[1]) - 1;
+                if (index >= 0 && index < ls.size()) {
+                    removeTask(index, ls);
+                } else {
+                    printRes("This is an invalid task");
                 }
             } else {
                 if (ls.size() < 100) {
@@ -59,13 +67,19 @@ public class Tom {
         }
     }
 
+    public static void removeTask(int i, ArrayList<Task> ls) {
+        Task t = ls.remove(i);
+        printRes(String.format("Noted. I've removed this task:\n %s \nNow you have %d tasks in the list.", t,
+                ls.size()));
+    }
+
     public static void addTask(String input, ArrayList<Task> ls) throws TomException {
         String task = input.split(" ")[0];
         String[] val;
         String description, start, end;
         switch (task) {
             case "deadline":
-                if(!input.contains("/by")) {
+                if (!input.contains("/by")) {
                     throw new TomException("Please enter in this format \"deadline [description] /by [deadline] \"");
                 }
                 val = input.substring(9).trim().split("/by", 2);
@@ -86,12 +100,14 @@ public class Tom {
 
             case "event":
                 val = input.substring(6).trim().split("/from", 2);
-                if(!input.contains("/from") || !input.contains("/to")) {
-                    throw new TomException("Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                if (!input.contains("/from") || !input.contains("/to")) {
+                    throw new TomException(
+                            "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
                 }
                 String[] val2 = val[1].split("/to", 2);
                 if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
-                    throw new TomException("Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                    throw new TomException(
+                            "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
                 }
                 ls.add(new Events(val[0], val2[0].trim(), val2[1].trim()));
                 break;
