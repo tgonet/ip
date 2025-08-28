@@ -116,12 +116,12 @@ public class Tom {
                 case "deadline":
                     if (!input.contains("/by")) {
                         throw new TomException(
-                                "Please enter in this format \"deadline [description] /by [deadline] \"");
+                                "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
                     }
                     val = input.substring(9).trim().split("/by", 2);
                     if (val[0].isBlank() || val[1].isBlank()) {
                         throw new TomException(
-                                "Please enter in this format \"deadline [description] /by [deadline] \"");
+                                "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
                     }
                     Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
                     ls.add(d);
@@ -132,7 +132,7 @@ public class Tom {
                     description = input.substring(4).trim();
                     if (description.isBlank()) {
                         throw new TomException(
-                                "You are missing a description. Enter in this format \"todo [description]\"");
+                                "You are missing a description. Enter in this format \"todo [yyyy-MM-dd HH:mm]\"");
                     }
                     ToDo t = new ToDo(description);
                     ls.add(new ToDo(description));
@@ -143,12 +143,12 @@ public class Tom {
                     val = input.substring(6).trim().split("/from", 2);
                     if (!input.contains("/from") || !input.contains("/to")) {
                         throw new TomException(
-                                "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                                "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm] /to [yyyy-MM-dd HH:mm] \"");
                     }
                     String[] val2 = val[1].split("/to", 2);
                     if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
                         throw new TomException(
-                                "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                                "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm] /to [yyyy-MM-dd HH:mm] \"");
                     }
                     Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
                             LocalDateTime.parse(val2[1].trim(), fmt));
