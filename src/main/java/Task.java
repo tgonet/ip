@@ -20,4 +20,9 @@ public class Task {
         String val = this.marked ? "X" : " ";
         return "[" + val + "] " + this.name;
     }
+
+    public String toFileString() {
+        String val = this.marked ? "X" : " ";
+        return val + "," + this.name;
+    }
 }

@@ -8,6 +8,18 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[" + "D" + "]" + super.toString() + "(by: " + this.deadline + ")";
+        return "[" + "D" + "]" + super.toString() + " (by: " + this.deadline + ")";
+    }
+
+    public String toFileString() {
+        return "D" + "," + super.toFileString() + "," + this.deadline;
+    }
+
+    public static Deadline fromFileString(String[] fileString) {
+        Deadline d = new Deadline(fileString[2], fileString[3]);
+        if (fileString[1].equals("X")) {
+            d.mark();
+        }
+        return d;
     }
 }

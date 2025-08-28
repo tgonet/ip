@@ -1,10 +1,22 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Tom {
     public static void main(String[] args) {
+        String filePath = "./data/list.txt";
+        FileManager fileManager = new FileManager(filePath);
         Scanner sc = new Scanner(System.in);
         ArrayList<Task> ls = new ArrayList<Task>();
+        try {
+            ls = fileManager.getFileContents();
+            viewList(ls);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+        }
 
         String logo = " _____ ___  __  __ \n"
                 + "|_   _/ _ \\|  \\/  |\n"
@@ -30,6 +42,13 @@ public class Tom {
                     Task task = ls.get(index);
                     if (!task.getMarked()) {
                         task.mark();
+                        try {
+                            fileManager.writeToFile(ls);
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                            System.out.println(e.getMessage() + "Please try again");
+                        }
                         printRes("Nice! I've marked this task as done: " + task.toString());
                     } else {
                         printRes("Task is already marked.");
@@ -41,6 +60,13 @@ public class Tom {
                     Task task = ls.get(index);
                     if (task.getMarked()) {
                         task.mark();
+                        try {
+                            fileManager.writeToFile(ls);
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                            System.out.println(e.getMessage() + "Please try again");
+                        }
                         printRes("I've unmarked this task as done: " + task.toString());
                     } else {
                         printRes("Task is already unmarked.");
@@ -49,70 +75,92 @@ public class Tom {
             } else if (input.startsWith("delete ")) {
                 index = Integer.parseInt(input.split(" ")[1]) - 1;
                 if (index >= 0 && index < ls.size()) {
-                    removeTask(index, ls);
+                    removeTask(index, ls, fileManager);
                 } else {
                     printRes("This is an invalid task");
                 }
             } else {
                 if (ls.size() < 100) {
                     try {
-                        addTask(input, ls);
+                        addTask(input, ls, fileManager);
                         printRes(String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
                                 ls.get(ls.size() - 1).toString(), ls.size()));
                     } catch (Exception e) {
                         printRes(e.toString());
                     }
                 }
+
             }
         }
     }
 
-    public static void removeTask(int i, ArrayList<Task> ls) {
-        Task t = ls.remove(i);
-        printRes(String.format("Noted. I've removed this task:\n %s \nNow you have %d tasks in the list.", t,
-                ls.size()));
+    public static void removeTask(int i, ArrayList<Task> ls, FileManager fileManager) {
+        try {
+            Task t = ls.remove(i);
+            fileManager.writeToFile(ls);
+            printRes(String.format("Noted. I've removed this task:\n %s \nNow you have %d tasks in the list.", t,
+                    ls.size()));
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e.getMessage());
+        }
+
     }
 
-    public static void addTask(String input, ArrayList<Task> ls) throws TomException {
+    public static void addTask(String input, ArrayList<Task> ls, FileManager fileManager) throws TomException {
         String task = input.split(" ")[0];
         String[] val;
         String description, start, end;
-        switch (task) {
-            case "deadline":
-                if (!input.contains("/by")) {
-                    throw new TomException("Please enter in this format \"deadline [description] /by [deadline] \"");
-                }
-                val = input.substring(9).trim().split("/by", 2);
-                if (val[0].isBlank() || val[1].isBlank()) {
-                    throw new TomException("Please enter in this format \"deadline [description] /by [deadline] \"");
-                }
-                ls.add(new Deadline(val[0], val[1].trim()));
-                break;
 
-            case "todo":
-                description = input.substring(4).trim();
-                if (description.isBlank()) {
-                    throw new TomException(
-                            "You are missing a description. Enter in this format \"todo [description]\"");
-                }
-                ls.add(new ToDo(description));
-                break;
+        try {
+            switch (task) {
+                case "deadline":
+                    if (!input.contains("/by")) {
+                        throw new TomException(
+                                "Please enter in this format \"deadline [description] /by [deadline] \"");
+                    }
+                    val = input.substring(9).trim().split("/by", 2);
+                    if (val[0].isBlank() || val[1].isBlank()) {
+                        throw new TomException(
+                                "Please enter in this format \"deadline [description] /by [deadline] \"");
+                    }
+                    Deadline d = new Deadline(val[0].trim(), val[1].trim());
+                    ls.add(d);
+                    fileManager.appendToFile(String.format("%s\n", d.toFileString()));
+                    break;
 
-            case "event":
-                val = input.substring(6).trim().split("/from", 2);
-                if (!input.contains("/from") || !input.contains("/to")) {
-                    throw new TomException(
-                            "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
-                }
-                String[] val2 = val[1].split("/to", 2);
-                if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
-                    throw new TomException(
-                            "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
-                }
-                ls.add(new Events(val[0], val2[0].trim(), val2[1].trim()));
-                break;
-            default:
-                throw new TomException("Please enter something that is under my control");
+                case "todo":
+                    description = input.substring(4).trim();
+                    if (description.isBlank()) {
+                        throw new TomException(
+                                "You are missing a description. Enter in this format \"todo [description]\"");
+                    }
+                    ToDo t = new ToDo(description);
+                    ls.add(new ToDo(description));
+                    fileManager.appendToFile(String.format("%s\n", t.toFileString()));
+                    break;
+
+                case "event":
+                    val = input.substring(6).trim().split("/from", 2);
+                    if (!input.contains("/from") || !input.contains("/to")) {
+                        throw new TomException(
+                                "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                    }
+                    String[] val2 = val[1].split("/to", 2);
+                    if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
+                        throw new TomException(
+                                "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
+                    }
+                    Events e = new Events(val[0].trim(), val2[0].trim(), val2[1].trim());
+                    ls.add(e);
+                    fileManager.appendToFile(String.format("%s\n", e.toFileString()));
+                    break;
+                default:
+                    throw new TomException("Please enter something that is under my control");
+            }
+        } catch (IOException e) {
+            // TODO: handle exception
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 
