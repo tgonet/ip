@@ -1,8 +1,8 @@
 import java.util.Scanner;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Tom {
@@ -13,7 +13,6 @@ public class Tom {
         ArrayList<Task> ls = new ArrayList<Task>();
         try {
             ls = fileManager.getFileContents();
-            viewList(ls);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
         }
@@ -89,7 +88,6 @@ public class Tom {
                         printRes(e.toString());
                     }
                 }
-
             }
         }
     }
@@ -110,6 +108,7 @@ public class Tom {
     public static void addTask(String input, ArrayList<Task> ls, FileManager fileManager) throws TomException {
         String task = input.split(" ")[0];
         String[] val;
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String description, start, end;
 
         try {
@@ -124,7 +123,7 @@ public class Tom {
                         throw new TomException(
                                 "Please enter in this format \"deadline [description] /by [deadline] \"");
                     }
-                    Deadline d = new Deadline(val[0].trim(), val[1].trim());
+                    Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
                     ls.add(d);
                     fileManager.appendToFile(String.format("%s\n", d.toFileString()));
                     break;
@@ -151,7 +150,8 @@ public class Tom {
                         throw new TomException(
                                 "Please enter in this format \"event [description] /from [datetime] /to [datetime] \"");
                     }
-                    Events e = new Events(val[0].trim(), val2[0].trim(), val2[1].trim());
+                    Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
+                            LocalDateTime.parse(val2[1].trim(), fmt));
                     ls.add(e);
                     fileManager.appendToFile(String.format("%s\n", e.toFileString()));
                     break;

@@ -1,8 +1,13 @@
-public class Events extends Task {
-    String start;
-    String end;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public Events(String name, String start, String end) {
+public class Events extends Task {
+    LocalDateTime start;
+    LocalDateTime end;
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
+
+    public Events(String name, LocalDateTime start, LocalDateTime end) {
         super(name);
         this.start = start;
         this.end = end;
@@ -10,15 +15,17 @@ public class Events extends Task {
 
     @Override
     public String toString() {
-        return "[" + "E" + "]" + super.toString() + " (from: " + this.start + " to: " + this.end + ")";
+        return "[" + "E" + "]" + super.toString() + " (from: "
+                + this.start.format(formatter) + " to: "
+                + this.end.format(formatter) + ")";
     }
 
     public String toFileString() {
-        return "E" + "," + super.toFileString() + "," + this.start + "," + this.end;
+        return "E" + "," + super.toFileString() + "," + this.start.format(formatter) + "," + this.end.format(formatter);
     }
 
     public static Events fromFileString(String[] fileString) {
-        Events e = new Events(fileString[2], fileString[3], fileString[4]);
+        Events e = new Events(fileString[2], LocalDateTime.parse(fileString[3], formatter), LocalDateTime.parse(fileString[4], formatter));
         if (fileString[1].equals("X")) {
             e.mark();
         }
