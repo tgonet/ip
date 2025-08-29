@@ -1,4 +1,12 @@
+package Tom;
+
 import java.util.Scanner;
+
+import Tom.Exception.TomException;
+import Tom.FileManager.FileManager;
+import Tom.Task.Task;
+import Tom.TaskManager.TaskManager;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
