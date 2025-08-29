@@ -13,6 +13,14 @@ public class Events extends Task {
         this.end = end;
     }
 
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public LocalDateTime getEnd() {
+        return this.end;
+    }
+
     @Override
     public String toString() {
         return "[" + "E" + "]" + super.toString() + " (from: "

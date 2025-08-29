@@ -78,6 +78,8 @@ public class Tom {
                 } else {
                     printRes("This is an invalid task");
                 }
+            } else if (input.startsWith("occur ")) {
+                checkOccuringDates(input, ls);
             } else {
                 if (ls.size() < 100) {
                     try {
@@ -88,6 +90,33 @@ public class Tom {
                         printRes(e.toString());
                     }
                 }
+            }
+        }
+    }
+
+    public static void checkOccuringDates(String input, ArrayList<Task> ls) {
+        ArrayList<Task> temp = new ArrayList<>();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String[] s = input.split(" ");
+        String dateTime = s[1] + " " + s[2];
+        LocalDateTime tempDateTime = LocalDateTime.parse(dateTime, fmt);
+        ls.forEach(t -> {
+            if (t instanceof Deadline) {
+                Deadline d = (Deadline) t;
+                if (d.getDeadline().equals(tempDateTime)) {
+                    temp.add(d);
+                }
+            } else if (t instanceof Events) {
+                Events e = (Events) t;
+                if (tempDateTime.isAfter(e.getStart()) && tempDateTime.isBefore(e.getEnd())) {
+                    temp.add(e);
+                }
+            }
+        });
+        if (temp.size() > 0) {
+            System.out.println("On " + dateTime + " you have these activities:");
+            for (Task g : temp) {
+                System.out.println(g.toString());
             }
         }
     }
