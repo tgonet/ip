@@ -13,6 +13,10 @@ public class Task {
         this.marked = !this.marked;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public Boolean getMarked() {
         return this.marked;
     }

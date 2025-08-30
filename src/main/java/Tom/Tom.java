@@ -66,15 +66,17 @@ public class Tom {
                 } else if (input.startsWith("delete ")) {
                     Task t = this.taskManager.removeTask(input, fileManager);
                     printRes(
-                        String.format("Noted. I've removed this task:\n %s \nNow you have %d tasks in the list.", t,
-                                this.taskManager.getSize()));
+                            String.format("Noted. I've removed this task:\n %s \nNow you have %d tasks in the list.", t,
+                                    this.taskManager.getSize()));
                 } else if (input.startsWith("occur ")) {
                     taskManager.checkOccuringDates(input);
+                } else if (input.startsWith("find")) {
+                    taskManager.findSimilarDescriptions(input);
                 } else {
                     if (taskManager.getSize() < 100) {
                         Task task = this.taskManager.addTask(input, fileManager);
                         printRes(String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
-                        task.toString(), this.taskManager.getSize()));
+                                task.toString(), this.taskManager.getSize()));
                     }
                 }
             } catch (TomException e) {

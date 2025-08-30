@@ -184,4 +184,31 @@ public class TaskManager {
         return null;
     }
 
+    /**
+     * Prints tasks whose descriptions contain the given keyword (case-insensitive).
+     *
+     * @param keyword Keyword to search for in task descriptions.
+     */
+    
+    public void findSimilarDescriptions(String input) {
+        String desc = input.split(" ")[1];
+        ArrayList<Task> matchedTasks = new ArrayList<>();
+        String lowerKeyword = desc.toLowerCase();
+
+        for (Task t : this.taskList) {
+            if (t.getName().toLowerCase().contains(lowerKeyword)) {
+                matchedTasks.add(t);
+            }
+        }
+
+        if (matchedTasks.size() > 0) {
+            System.out.println("Tasks matching \"" + desc + "\":");
+            for (Task task : matchedTasks) {
+                System.out.println(task.toString());
+            }
+        } else {
+            System.out.println("No tasks found matching \"" + desc + "\".");
+        }
+    }
+
 }
