@@ -21,7 +21,6 @@ public class Task {
         this.name = name;
         this.isMarked = false;
     }
-    
 
     /**
      * Toggles the task's completion status.
