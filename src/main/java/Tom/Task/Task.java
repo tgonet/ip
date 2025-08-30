@@ -2,29 +2,29 @@ package Tom.Task;
 
 public class Task {
     private String name;
-    private Boolean marked;
+    private Boolean isMarked;
 
     public Task(String name) {
         this.name = name;
-        this.marked = false;
+        this.isMarked = false;
     }
 
     public void mark() {
-        this.marked = !this.marked;
+        this.isMarked = !this.isMarked;
     }
 
-    public Boolean getMarked() {
-        return this.marked;
+    public Boolean getIsMarked() {
+        return this.isMarked;
     }
 
     @Override
     public String toString() {
-        String val = this.marked ? "X" : " ";
+        String val = this.isMarked ? "X" : " ";
         return "[" + val + "] " + this.name;
     }
 
     public String toFileString() {
-        String val = this.marked ? "X" : " ";
+        String val = this.isMarked ? "X" : " ";
         return val + "," + this.name;
     }
 }

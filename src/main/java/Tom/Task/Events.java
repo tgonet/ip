@@ -30,11 +30,13 @@ public class Events extends Task {
     }
 
     public String toFileString() {
-        return "E" + "," + super.toFileString() + "," + this.start.format(formatter) + "," + this.end.format(formatter);
+        return "E" + "," + super.toFileString() + "," + this.start.format(formatter) + ","
+                + this.end.format(formatter);
     }
 
     public static Events fromFileString(String[] fileString) {
-        Events e = new Events(fileString[2], LocalDateTime.parse(fileString[3], formatter), LocalDateTime.parse(fileString[4], formatter));
+        Events e = new Events(fileString[2], LocalDateTime.parse(fileString[3], formatter),
+                LocalDateTime.parse(fileString[4], formatter));
         if (fileString[1].equals("X")) {
             e.mark();
         }

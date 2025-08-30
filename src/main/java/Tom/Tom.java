@@ -22,7 +22,7 @@ public class Tom {
             ArrayList<Task> ls = fileManager.getFileContents();
             this.taskManager = new TaskManager(ls);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
+            printRes("An Error occured please try again.");
         }
     }
 
@@ -78,7 +78,6 @@ public class Tom {
                     }
                 }
             } catch (TomException e) {
-                // TODO: handle exception
                 printRes(e.getMessage());
             }
         }
