@@ -6,7 +6,14 @@ package Tom.Task;
 
 public class Task {
     private String name;
-    private Boolean marked;
+    private Boolean isMarked;
+
+    /**
+     * Constructs a Task with a given name.
+     * The task is initially unmarked (incomplete).
+     *
+     * @param name Name/description of the task.
+     */
 
     /**
      * Constructs a Task with a given name.
@@ -17,7 +24,7 @@ public class Task {
 
     public Task(String name) {
         this.name = name;
-        this.marked = false;
+        this.isMarked = false;
     }
     
 
@@ -27,7 +34,7 @@ public class Task {
      */
 
     public void mark() {
-        this.marked = !this.marked;
+        this.isMarked = !this.isMarked;
     }
 
     public String getName() {
@@ -40,13 +47,13 @@ public class Task {
      * @return true if the task is marked, false otherwise.
      */
 
-    public Boolean getMarked() {
-        return this.marked;
+    public Boolean getIsMarked() {
+        return this.isMarked;
     }
 
     @Override
     public String toString() {
-        String val = this.marked ? "X" : " ";
+        String val = this.isMarked ? "X" : " ";
         return "[" + val + "] " + this.name;
     }
 
@@ -58,7 +65,7 @@ public class Task {
      */
 
     public String toFileString() {
-        String val = this.marked ? "X" : " ";
+        String val = this.isMarked ? "X" : " ";
         return val + "," + this.name;
     }
 }
