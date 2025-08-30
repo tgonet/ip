@@ -13,6 +13,17 @@ import Tom.Task.Events;
 import Tom.Task.Task;
 import Tom.Task.ToDo;
 
+/**
+ * Manages a list of {@link Task} objects and provides methods for adding,
+ * removing,
+ * viewing, marking/unmarking tasks, and checking tasks by specific dates.
+ * <p>
+ * This class interacts with a {@link FileManager} to persist tasks to a file
+ * and
+ * supports {@link ToDo}, {@link Deadline}, and {@link Events} task types.
+ * </p>
+ */
+
 public class TaskManager {
     ArrayList<Task> taskList;
 
@@ -20,9 +31,22 @@ public class TaskManager {
         this.taskList = taskList;
     }
 
+    /**
+     * Returns the number of tasks in the list.
+     *
+     * @return Size of the task list.
+     */
+
     public int getSize() {
         return this.taskList.size();
     }
+
+    /**
+     * Prints tasks occurring at a specified date and time.
+     *
+     * @param input Input string containing the date and time, e.g., "occur
+     *              2025-08-30 14:00".
+     */
 
     public void checkOccuringDates(String input) {
         ArrayList<Task> temp = new ArrayList<>();
@@ -51,6 +75,15 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Removes a task from the list by its index and updates the file.
+     *
+     * @param input       Input string containing the task index to remove.
+     * @param fileManager FileManager used to update the file.
+     * @return The task removed, or null if removal failed.
+     * @throws TomException If the task index is invalid.
+     */
+
     public Task removeTask(String input, FileManager fileManager) throws TomException {
         Task t = null;
         try {
@@ -67,6 +100,16 @@ public class TaskManager {
         }
         return t;
     }
+
+    /**
+     * Adds a new task to the list based on input and updates the file.
+     *
+     * @param input       Input string describing the task to add.
+     * @param fileManager FileManager used to append the new task.
+     * @return The newly added task, or null if addition failed.
+     * @throws TomException If the input format is invalid or constraints are
+     *                      violated.
+     */
 
     public Task addTask(String input, FileManager fileManager) throws TomException {
         String task = input.split(" ")[0];
@@ -132,6 +175,10 @@ public class TaskManager {
         return null;
     }
 
+    /**
+     * Displays the current list of tasks to the console.
+     */
+
     public void viewList() {
         int count = 1;
         if (this.taskList.size() > 0) {
@@ -148,6 +195,17 @@ public class TaskManager {
             System.out.println("____________________________________________________________");
         }
     }
+
+    /**
+     * Marks or unmarks a task as complete and updates the file.
+     *
+     * @param input       Input string containing the task index.
+     * @param isMarking   True to mark, false to unmark.
+     * @param fileManager FileManager used to persist changes.
+     * @return The updated task, or null if the operation failed.
+     * @throws TomException If the task index is invalid or task is already in the
+     *                      requested state.
+     */
 
     public Task mark(String input, boolean isMarking, FileManager fileManager) throws TomException {
         int index = Integer.parseInt(input.split(" ")[1]) - 1;

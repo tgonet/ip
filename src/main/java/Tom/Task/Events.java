@@ -3,10 +3,23 @@ package Tom.Task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a task that occurs over a period of time with a start and end.
+ * Extends {@link Task}.
+ */
+
 public class Events extends Task {
     LocalDateTime start;
     LocalDateTime end;
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
+
+     /**
+     * Constructs an Events task with a name, start time, and end time.
+     *
+     * @param name Name/description of the event.
+     * @param start The start date and time of the event.
+     * @param end The end date and time of the event.
+     */
 
     public Events(String name, LocalDateTime start, LocalDateTime end) {
         super(name);
@@ -14,9 +27,21 @@ public class Events extends Task {
         this.end = end;
     }
 
+     /**
+     * Returns the start time of the event.
+     *
+     * @return Start date and time as a {@link LocalDateTime}.
+     */
+
     public LocalDateTime getStart() {
         return this.start;
     }
+
+    /**
+     * Returns the end time of the event.
+     *
+     * @return End date and time as a {@link LocalDateTime}.
+     */
 
     public LocalDateTime getEnd() {
         return this.end;
@@ -29,10 +54,23 @@ public class Events extends Task {
                 + this.end.format(formatter) + ")";
     }
 
+    /**
+     * Returns a string representation of the event for saving to a file.
+     *
+     * @return Formatted string suitable for file storage.
+     */
+
     public String toFileString() {
         return "E" + "," + super.toFileString() + "," + this.start.format(formatter) + "," + this.end.format(formatter);
     }
 
+    /**
+     * Creates an Events task from a file string array.
+     *
+     * @param fileString Array of strings read from the file representing the event.
+     * @return An {@link Events} object with appropriate values and status.
+     */
+    
     public static Events fromFileString(String[] fileString) {
         Events e = new Events(fileString[2], LocalDateTime.parse(fileString[3], formatter), LocalDateTime.parse(fileString[4], formatter));
         if (fileString[1].equals("X")) {
