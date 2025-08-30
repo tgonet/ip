@@ -12,6 +12,17 @@ import Tom.Task.Events;
 import Tom.Task.Task;
 import Tom.Task.ToDo;
 
+/**
+ * Handles reading from and writing to a file for storing {@link Task} objects.
+ * <p>
+ * The {@code FileManager} class manages a file at the specified path. It
+ * ensures
+ * that the file exists upon initialization, provides methods to write a list of
+ * tasks to the file, append text to the file, and read the file contents into
+ * a list of {@link Task} objects.
+ * </p>
+ */
+
 public class FileManager {
     String filePath;
     File f;
@@ -21,6 +32,11 @@ public class FileManager {
         this.f = new File(filePath);
         init();
     }
+
+    /**
+     * Initializes the file at the specified path.
+     * Creates parent directories and the file if they do not exist.
+     */
 
     public void init() {
         if (!this.f.exists()) {
@@ -34,6 +50,13 @@ public class FileManager {
         }
     }
 
+    /**
+     * Writes a list of tasks to the file, overwriting existing content.
+     *
+     * @param ls List of tasks to write.
+     * @throws IOException If an I/O error occurs while writing.
+     */
+
     public void writeToFile(ArrayList<Task> ls) throws IOException {
         FileWriter fw = new FileWriter(this.filePath);
         for (int i = 0; i < ls.size(); i++) {
@@ -41,6 +64,13 @@ public class FileManager {
         }
         fw.close();
     }
+
+    /**
+     * Reads the file contents and returns them as a list of tasks.
+     *
+     * @return List of tasks read from the file.
+     * @throws FileNotFoundException If the file does not exist.
+     */
 
     public ArrayList<Task> getFileContents() throws FileNotFoundException {
         File f = new File(this.filePath); // create a File for the given file path
@@ -66,6 +96,13 @@ public class FileManager {
         s.close();
         return ls;
     }
+
+    /**
+     * Appends text to the end of the file without overwriting existing content.
+     *
+     * @param textToAppend Text to append to the file.
+     * @throws IOException If an I/O error occurs while writing.
+     */
 
     public void appendToFile(String textToAppend) throws IOException {
         FileWriter fw = new FileWriter(this.filePath, true); // create a FileWriter in append mode
