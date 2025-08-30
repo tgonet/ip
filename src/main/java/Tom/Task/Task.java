@@ -29,6 +29,10 @@ public class Task {
         this.marked = !this.marked;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     /**
      * Returns whether the task is marked as complete.
      *
