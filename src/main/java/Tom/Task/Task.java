@@ -1,5 +1,7 @@
 package Tom.Task;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a general task with a name and a completion status.
  */
@@ -7,13 +9,6 @@ package Tom.Task;
 public class Task {
     private String name;
     private Boolean isMarked;
-
-    /**
-     * Constructs a Task with a given name.
-     * The task is initially unmarked (incomplete).
-     *
-     * @param name Name/description of the task.
-     */
 
     /**
      * Constructs a Task with a given name.
@@ -36,6 +31,12 @@ public class Task {
     public void mark() {
         this.isMarked = !this.isMarked;
     }
+
+    /**
+     * Returns the name of the task.
+     *
+     * @return The task's name.
+     */
 
     public String getName() {
         return this.name;
