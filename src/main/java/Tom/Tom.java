@@ -1,5 +1,8 @@
+
 package Tom;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Tom.Exception.TomException;
@@ -8,15 +11,12 @@ import Tom.Task.Task;
 import Tom.TaskManager.TaskManager;
 import Tom.UI.UI;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 public class Tom {
 
-    FileManager fileManager;
-    TaskManager taskManager;
-    UI ui;
-    String filePath;
+    private FileManager fileManager;
+    private TaskManager taskManager;
+    private UI ui;
+    private String filePath;
 
     public Tom(String filePath) {
         try {

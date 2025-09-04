@@ -7,7 +7,7 @@ package Tom.Task;
 
 public class ToDo extends Task {
 
-     /**
+    /**
      * Constructs a ToDo task with a given name.
      *
      * @param name Name/description of the task.
@@ -22,7 +22,7 @@ public class ToDo extends Task {
         return "[" + "T" + "]" + super.toString();
     }
 
-     /**
+    /**
      * Returns a string representation of the ToDo task for saving to a file.
      *
      * @return Formatted string suitable for file storage.
@@ -32,7 +32,7 @@ public class ToDo extends Task {
         return "T" + "," + super.toFileString();
     }
 
-     /**
+    /**
      * Creates a ToDo task from a file string array.
      *
      * @param fileString Array of strings read from the file representing the task.

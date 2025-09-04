@@ -9,11 +9,11 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class Events extends Task {
-    LocalDateTime start;
-    LocalDateTime end;
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
+    private LocalDateTime start;
+    private LocalDateTime end;
 
-     /**
+    /**
      * Constructs an Events task with a name, start time, and end time.
      *
      * @param name Name/description of the event.
@@ -27,7 +27,7 @@ public class Events extends Task {
         this.end = end;
     }
 
-     /**
+    /**
      * Returns the start time of the event.
      *
      * @return Start date and time as a {@link LocalDateTime}.
