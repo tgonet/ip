@@ -1,7 +1,5 @@
 package Tom.Task;
 
-import java.time.LocalDateTime;
-
 /**
  * Represents a general task with a name and a completion status.
  */
@@ -57,7 +55,7 @@ public class Task {
         return "[" + val + "] " + this.name;
     }
 
-     /**
+    /**
      * Returns a string representation of the task for saving to a file.
      * Includes the task's status and name, separated by a comma.
      *

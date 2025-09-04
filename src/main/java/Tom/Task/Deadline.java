@@ -8,9 +8,10 @@ import java.time.format.DateTimeFormatter;
  * Extends {@link Task}.
  */
 
+ 
 public class Deadline extends Task {
-    LocalDateTime deadline;
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
+    private LocalDateTime deadline;
 
     /**
      * Constructs a Deadline task with a name and a deadline.

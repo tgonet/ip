@@ -14,13 +14,13 @@ package Tom.Exception;
  * </pre>
  */
 
-public class TomException extends Exception{
+public class TomException extends Exception {
     public TomException(String message) {
         super(message);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.getMessage();
     }
 }

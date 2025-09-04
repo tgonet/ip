@@ -26,8 +26,8 @@ import Tom.UI.UI;
  */
 
 public class TaskManager {
-    ArrayList<Task> tasks;
-    UI ui;
+    private ArrayList<Task> tasks;
+    private UI ui;
 
     public TaskManager(ArrayList<Task> taskList, UI ui) {
         this.tasks = taskList;
@@ -133,53 +133,53 @@ public class TaskManager {
         if (getSize() < 100) {
             try {
                 switch (task) {
-                    case "deadline":
-                        if (!input.contains("/by")) {
-                            throw new TomException(
-                                    "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
-                        }
-                        val = input.substring(9).trim().split("/by", 2);
-                        if (val[0].isBlank() || val[1].isBlank()) {
-                            throw new TomException(
-                                    "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
-                        }
-                        Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
-                        this.tasks.add(d);
-                        fileManager.appendToFile(String.format("%s\n", d.toFileString()));
-                        return d;
+                case "deadline":
+                    if (!input.contains("/by")) {
+                        throw new TomException(
+                                "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
+                    }
+                    val = input.substring(9).trim().split("/by", 2);
+                    if (val[0].isBlank() || val[1].isBlank()) {
+                        throw new TomException(
+                                "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
+                    }
+                    Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
+                    this.tasks.add(d);
+                    fileManager.appendToFile(String.format("%s\n", d.toFileString()));
+                    return d;
 
-                    case "todo":
-                        String description = input.substring(4).trim();
-                        if (description.isBlank()) {
-                            throw new TomException(
-                                    "Please enter in this format \"todo [description]\"");
-                        }
-                        ToDo t = new ToDo(description);
-                        this.tasks.add(t);
-                        fileManager.appendToFile(String.format("%s\n", t.toFileString()));
-                        return t;
+                case "todo":
+                    String description = input.substring(4).trim();
+                    if (description.isBlank()) {
+                        throw new TomException(
+                                "Please enter in this format \"todo [description]\"");
+                    }
+                    ToDo t = new ToDo(description);
+                    this.tasks.add(t);
+                    fileManager.appendToFile(String.format("%s\n", t.toFileString()));
+                    return t;
 
-                    case "event":
-                        val = input.substring(6).trim().split("/from", 2);
-                        if (!input.contains("/from") || !input.contains("/to")) {
-                            throw new TomException(
-                                    "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
-                                            + " /to [yyyy-MM-dd HH:mm] \"");
-                        }
-                        String[] val2 = val[1].split("/to", 2);
-                        if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
-                            throw new TomException(
-                                    "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
-                                            + " /to [yyyy-MM-dd HH:mm] \"");
-                        }
-                        Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
-                                LocalDateTime.parse(val2[1].trim(), fmt));
-                        this.tasks.add(e);
-                        fileManager.appendToFile(String.format("%s\n", e.toFileString()));
-                        return e;
+                case "event":
+                    val = input.substring(6).trim().split("/from", 2);
+                    if (!input.contains("/from") || !input.contains("/to")) {
+                        throw new TomException(
+                                "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
+                                        + " /to [yyyy-MM-dd HH:mm] \"");
+                    }
+                    String[] val2 = val[1].split("/to", 2);
+                    if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
+                        throw new TomException(
+                                "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
+                                        + " /to [yyyy-MM-dd HH:mm] \"");
+                    }
+                    Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
+                            LocalDateTime.parse(val2[1].trim(), fmt));
+                    this.tasks.add(e);
+                    fileManager.appendToFile(String.format("%s\n", e.toFileString()));
+                    return e;
 
-                    default:
-                        throw new TomException("Please enter something that is under my control");
+                default:
+                    throw new TomException("Please enter something that is under my control");
                 }
             } catch (IOException e) {
                 this.ui.printRes(e.getMessage() + "Please try again");
@@ -261,7 +261,7 @@ public class TaskManager {
     /**
      * Prints tasks whose descriptions contain the given keyword (case-insensitive).
      *
-     * @param keyword Keyword to search for in task descriptions.
+     * @param input Keyword to search for in task descriptions.
      */
 
     public void findSimilarDescriptions(String input) {
@@ -275,7 +275,7 @@ public class TaskManager {
             }
         }
 
-        if (matchedTasks.size() > 0) {
+        if (!matchedTasks.isEmpty()) {
             this.ui.printLineBreak();
             this.ui.print("Tasks matching \"" + desc + "\":");
             for (Task task : matchedTasks) {
