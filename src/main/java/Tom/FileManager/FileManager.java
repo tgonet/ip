@@ -24,8 +24,8 @@ import Tom.Task.ToDo;
  */
 
 public class FileManager {
-    String filePath;
-    File f;
+    private String filePath;
+    private File f;
 
     public FileManager(String filePath) {
         this.filePath = filePath;
@@ -45,7 +45,7 @@ public class FileManager {
                 this.f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
-            } 
+            }
         }
     }
 
