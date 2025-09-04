@@ -2,6 +2,7 @@ package Tom.TaskManager;
 
 import Tom.Exception.TomException;
 import Tom.FileManager.FileManager;
+import Tom.UI.UI;
 
 import java.util.ArrayList;
 
@@ -10,12 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskManagerTest {
 
+    UI ui = new UI();
+
     @Test
     void testCorrectInput() {
         String input = "deadline return book /by 2026-03-12 00:00";
-
-        TaskManager tm = new TaskManager(new ArrayList<>());   // <-- your TaskManager class
-        FileManager fm = new FileManager("./data/test.txt");   // <-- a real or stubbed FileManager
+        TaskManager tm = new TaskManager(new ArrayList<>(), ui); // <-- your TaskManager class
+        FileManager fm = new FileManager("./data/test.txt"); // <-- a real or stubbed FileManager
 
         assertDoesNotThrow(() -> {
             tm.addTask(input, fm);
@@ -25,8 +27,8 @@ public class TaskManagerTest {
     @Test
     void testMissingTime() {
         String input = "deadline return book /by 2026-03-12";
-        TaskManager tm = new TaskManager(new ArrayList<>());   // <-- your TaskManager class
-        FileManager fm = new FileManager("./data/test.txt");   // <-- a real or stubbed FileManager
+        TaskManager tm = new TaskManager(new ArrayList<>(), ui); // <-- your TaskManager class
+        FileManager fm = new FileManager("./data/test.txt"); // <-- a real or stubbed FileManager
 
         TomException ex = assertThrows(TomException.class, () -> {
             tm.addTask(input, fm);
@@ -38,8 +40,8 @@ public class TaskManagerTest {
     @Test
     void testMissingDate() {
         String input = "deadline return book /by 00:00";
-        TaskManager tm = new TaskManager(new ArrayList<>());   // <-- your TaskManager class
-        FileManager fm = new FileManager("./data/test.txt");   // <-- a real or stubbed FileManager
+        TaskManager tm = new TaskManager(new ArrayList<>(), ui); // <-- your TaskManager class
+        FileManager fm = new FileManager("./data/test.txt"); // <-- a real or stubbed FileManager
 
         TomException ex = assertThrows(TomException.class, () -> {
             tm.addTask(input, fm);
