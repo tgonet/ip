@@ -51,7 +51,7 @@ public class TaskManager {
      *              2025-08-30 14:00".
      */
 
-    public void checkOccuringDates(String input) throws TomException {
+    public String checkOccuringDates(String input) throws TomException {
         ArrayList<Task> temp = new ArrayList<>();
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -73,13 +73,15 @@ public class TaskManager {
                 }
             });
             if (temp.size() > 0) {
-                this.ui.printLineBreak();
-                this.ui.print("On " + dateTime + " you have these activities:");
+                String result = "On " + dateTime + " you have these activities\n:";
                 for (Task g : temp) {
-                    this.ui.print(g.toString());
+                    result += g.toString() + "\n";
                 }
+                return result;
             }
-            this.ui.printLineBreak();
+            else {
+                return "You have no activity on this day";
+            }
         } catch (DateTimeParseException e) {
             throw new TomException(
                     "Please enter in this format \"occur [yyyy-MM-dd HH:mm]\"");
@@ -110,9 +112,8 @@ public class TaskManager {
                 throw new TomException("This is an invalid task. Please check the task number and try again.");
             }
         } catch (IOException e) {
-            this.ui.printEnd(e.getMessage());
+            throw new TomException(e.getMessage());
         }
-        return t;
     }
 
     /**
@@ -182,7 +183,7 @@ public class TaskManager {
                     throw new TomException("Please enter something that is under my control");
                 }
             } catch (IOException e) {
-                this.ui.printRes(e.getMessage() + "Please try again");
+                throw new TomException(e.getMessage() + "Please try again");
             } catch (DateTimeParseException e) {
                 throw new TomException("Please follow the format yyyy-MM-dd HH:mm");
             }
@@ -194,21 +195,18 @@ public class TaskManager {
      * Displays the current list of tasks to the console.
      */
 
-    public void viewList() {
+    public String viewList() {
         int count = 1;
+        String result;
         if (this.tasks.size() > 0) {
-            this.ui.printLineBreak();
-            this.ui.print("Here are the tasks in your list:");
+            result = "Here are the tasks in your list: \n";
             for (Task i : this.tasks) {
-                this.ui.print(count + ". " + i.toString());
+                result += count + ". " + i.toString() + "\n";
                 count++;
             }
-            this.ui.printLineBreak();
+            return result;
         } else {
-            this.ui.printLineBreak();
-            this.ui.print("You have not added anything to the list!");
-            this.ui.printLineBreak();
-
+            return "You have not added anything to the list!";
         }
     }
 
@@ -234,7 +232,7 @@ public class TaskManager {
                         fileManager.writeToFile(this.tasks);
                         return task;
                     } catch (IOException e) {
-                        this.ui.printEnd(e.getMessage() + "Please try again");
+                        throw new TomException(e.getMessage() + "Please try again");
                     }
                 } else {
                     throw new TomException("Task is already marked.");
@@ -246,7 +244,7 @@ public class TaskManager {
                         fileManager.writeToFile(this.tasks);
                         return task;
                     } catch (IOException e) {
-                        this.ui.printRes(e.getMessage() + "Please try again");
+                        throw new TomException(e.getMessage() + "Please try again");
                     }
                 } else {
                     throw new TomException("Task is already unmarked.");
@@ -255,7 +253,6 @@ public class TaskManager {
         } else {
             throw new TomException("Invalid Task. Please check the task number and try again.");
         }
-        return null;
     }
 
     /**
@@ -264,7 +261,7 @@ public class TaskManager {
      * @param input Keyword to search for in task descriptions.
      */
 
-    public void findSimilarDescriptions(String input) {
+    public String findSimilarDescriptions(String input) {
         String desc = input.split(" ")[1];
         ArrayList<Task> matchedTasks = new ArrayList<>();
         String lowerKeyword = desc.toLowerCase();
@@ -276,14 +273,14 @@ public class TaskManager {
         }
 
         if (!matchedTasks.isEmpty()) {
-            this.ui.printLineBreak();
-            this.ui.print("Tasks matching \"" + desc + "\":");
+            String result = "";
+            result = "Tasks matching \"" + desc + "\":\n";
             for (Task task : matchedTasks) {
-                this.ui.print(task.toString());
+                result += task.toString() + "\n";
             }
-            this.ui.printLineBreak();
+            return result;
         } else {
-            this.ui.printRes("No tasks found matching \"" + desc + "\".");
+            return "No tasks found matching \"" + desc + "\".";
         }
     }
 
