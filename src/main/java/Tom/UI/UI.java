@@ -12,15 +12,14 @@ public class UI {
     /**
      * Prints a welcome message along with an ASCII art logo to the console.
      */
-    public void printWelcome() {
+    public String printWelcome() {
         String logo = " _____ ___  __  __ \n"
                 + "|_   _/ _ \\|  \\/  |\n"
                 + "  | || | | | |\\/| |\n"
                 + "  | || |_| | |  | |\n"
                 + "  |_| \\___/|_|  |_|\n";
-        System.out.println("Hello from\n" + logo);
-        System.out.println("What do u need me to do?");
-        System.out.println("____________________________________________________________");
+        String message = "Hello from\n" + logo + "\nWhat do u need me to do?";
+        return message;
     }
 
     /**
