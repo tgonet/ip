@@ -130,7 +130,7 @@ public class TaskManager {
         String task = input.split(" ")[0];
         String[] val;
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+        assert getSize() >= 0 : "Task list size should never be negative";
         if (getSize() < 100) {
             try {
                 switch (task) {
@@ -206,6 +206,7 @@ public class TaskManager {
             }
             return result;
         } else {
+            assert getSize() == 0 : "Task list size should be zero";
             return "You have not added anything to the list!";
         }
     }
@@ -273,6 +274,7 @@ public class TaskManager {
         }
 
         if (!matchedTasks.isEmpty()) {
+            assert matchedTasks.size() >= 0 : "Matched Task list size should not be negative";
             String result = "";
             result = "Tasks matching \"" + desc + "\":\n";
             for (Task task : matchedTasks) {
@@ -280,6 +282,7 @@ public class TaskManager {
             }
             return result;
         } else {
+            assert matchedTasks.size() == 0 : "Matched Task list size should be negative";
             return "No tasks found matching \"" + desc + "\".";
         }
     }
