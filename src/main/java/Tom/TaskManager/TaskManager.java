@@ -303,6 +303,7 @@ public class TaskManager {
             return "No tasks found matching \"" + desc + "\".";
         } 
 
+        assert matchedTasks.size() > 0: "Matched tasks should not be empty here";
         String result = "";
         result = "Tasks matching \"" + desc + "\":\n";
         for (Task task : matchedTasks) {
