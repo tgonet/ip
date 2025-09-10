@@ -12,7 +12,6 @@ import Tom.Task.Deadline;
 import Tom.Task.Events;
 import Tom.Task.Task;
 import Tom.Task.ToDo;
-import Tom.UI.UI;
 
 /**
  * Manages a list of {@link Task} objects and provides methods for adding,
@@ -27,11 +26,10 @@ import Tom.UI.UI;
 
 public class TaskManager {
     private ArrayList<Task> tasks;
-    private UI ui;
+    private int MAX_SIZE = 100;
 
-    public TaskManager(ArrayList<Task> taskList, UI ui) {
+    public TaskManager(ArrayList<Task> taskList) {
         this.tasks = taskList;
-        this.ui = ui;
     }
 
     /**
@@ -59,19 +57,26 @@ public class TaskManager {
             String[] s = input.split(" ");
             String dateTime = s[1] + " " + s[2];
             LocalDateTime tempDateTime = LocalDateTime.parse(dateTime, fmt);
+
             this.tasks.forEach(t -> {
-                if (t instanceof Deadline) {
+                boolean isADeadline = t instanceof Deadline;
+                boolean isAEvent = t instanceof Events;
+
+                if (isADeadline) {
                     Deadline d = (Deadline) t;
                     if (d.getDeadline().equals(tempDateTime)) {
                         temp.add(d);
                     }
-                } else if (t instanceof Events) {
+                } else if (isAEvent) {
                     Events e = (Events) t;
-                    if (tempDateTime.isAfter(e.getStart()) && tempDateTime.isBefore(e.getEnd())) {
+                    boolean isWithinEvent = tempDateTime.isAfter(e.getStart()) && tempDateTime.isBefore(e.getEnd());
+                    if (isWithinEvent) {
                         temp.add(e);
                     }
                 }
+
             });
+
             if (temp.size() > 0) {
                 String result = "On " + dateTime + " you have these activities\n:";
                 for (Task g : temp) {
@@ -82,6 +87,7 @@ public class TaskManager {
             else {
                 return "You have no activity on this day";
             }
+
         } catch (DateTimeParseException e) {
             throw new TomException(
                     "Please enter in this format \"occur [yyyy-MM-dd HH:mm]\"");
@@ -102,15 +108,19 @@ public class TaskManager {
 
     public Task removeTask(String input, FileManager fileManager) throws TomException {
         Task t = null;
+
         try {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            if (index >= 0 && index < this.tasks.size()) {
+            boolean isValidIndex = index >= 0 && index < getSize();
+
+            if (isValidIndex) {
                 t = this.tasks.remove(index);
                 fileManager.writeToFile(this.tasks);
                 return t;
             } else {
                 throw new TomException("This is an invalid task. Please check the task number and try again.");
             }
+
         } catch (IOException e) {
             throw new TomException(e.getMessage());
         }
@@ -131,64 +141,77 @@ public class TaskManager {
         String[] val;
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         assert getSize() >= 0 : "Task list size should never be negative";
-        if (getSize() < 100) {
-            try {
-                switch (task) {
-                case "deadline":
-                    if (!input.contains("/by")) {
-                        throw new TomException(
-                                "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
-                    }
-                    val = input.substring(9).trim().split("/by", 2);
-                    if (val[0].isBlank() || val[1].isBlank()) {
-                        throw new TomException(
-                                "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
-                    }
-                    Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
-                    this.tasks.add(d);
-                    fileManager.appendToFile(String.format("%s\n", d.toFileString()));
-                    return d;
-
-                case "todo":
-                    String description = input.substring(4).trim();
-                    if (description.isBlank()) {
-                        throw new TomException(
-                                "Please enter in this format \"todo [description]\"");
-                    }
-                    ToDo t = new ToDo(description);
-                    this.tasks.add(t);
-                    fileManager.appendToFile(String.format("%s\n", t.toFileString()));
-                    return t;
-
-                case "event":
-                    val = input.substring(6).trim().split("/from", 2);
-                    if (!input.contains("/from") || !input.contains("/to")) {
-                        throw new TomException(
-                                "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
-                                        + " /to [yyyy-MM-dd HH:mm] \"");
-                    }
-                    String[] val2 = val[1].split("/to", 2);
-                    if (val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank()) {
-                        throw new TomException(
-                                "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
-                                        + " /to [yyyy-MM-dd HH:mm] \"");
-                    }
-                    Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
-                            LocalDateTime.parse(val2[1].trim(), fmt));
-                    this.tasks.add(e);
-                    fileManager.appendToFile(String.format("%s\n", e.toFileString()));
-                    return e;
-
-                default:
-                    throw new TomException("Please enter something that is under my control");
-                }
-            } catch (IOException e) {
-                throw new TomException(e.getMessage() + "Please try again");
-            } catch (DateTimeParseException e) {
-                throw new TomException("Please follow the format yyyy-MM-dd HH:mm");
-            }
+        
+        if (getSize() >= MAX_SIZE) {
+            throw new TomException("Task limit reached. Cannot add more than 100 tasks.");
         }
-        return null;
+
+        try {
+            switch (task) {
+            case "deadline":
+                if (!input.contains("/by")) {
+                    throw new TomException(
+                            "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
+                }
+
+                val = input.substring(9).trim().split("/by", 2);
+                boolean fieldHasBlanks = val[0].isBlank() || val[1].isBlank();
+
+                if (fieldHasBlanks) {
+                    throw new TomException(
+                            "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
+                }
+
+                Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
+                this.tasks.add(d);
+                fileManager.appendToFile(String.format("%s\n", d.toFileString()));
+                return d;
+
+            case "todo":
+                String description = input.substring(4).trim();
+
+                if (description.isBlank()) {
+                    throw new TomException(
+                            "Please enter in this format \"todo [description]\"");
+                }
+
+                ToDo t = new ToDo(description);
+                this.tasks.add(t);
+                fileManager.appendToFile(String.format("%s\n", t.toFileString()));
+                return t;
+
+            case "event":
+                val = input.substring(6).trim().split("/from", 2);
+                boolean hasFormatingIssues = !input.contains("/from") || !input.contains("/to");
+                if (hasFormatingIssues) {
+                    throw new TomException(
+                            "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
+                                    + " /to [yyyy-MM-dd HH:mm] \"");
+                }
+
+                String[] val2 = val[1].split("/to", 2);
+
+                boolean hasBlankFields = val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank();
+                if (hasBlankFields) {
+                    throw new TomException(
+                            "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
+                                    + " /to [yyyy-MM-dd HH:mm] \"");
+                }
+
+                Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
+                        LocalDateTime.parse(val2[1].trim(), fmt));
+                this.tasks.add(e);
+                fileManager.appendToFile(String.format("%s\n", e.toFileString()));
+                return e;
+
+            default:
+                throw new TomException("Please enter something that is under my control");
+            }
+        } catch (IOException e) {
+            throw new TomException(e.getMessage() + "Please try again");
+        } catch (DateTimeParseException e) {
+            throw new TomException("Please follow the format yyyy-MM-dd HH:mm");
+        }
     }
 
     /**
@@ -198,6 +221,7 @@ public class TaskManager {
     public String viewList() {
         int count = 1;
         String result;
+
         if (this.tasks.size() > 0) {
             result = "Here are the tasks in your list: \n";
             for (Task i : this.tasks) {
@@ -224,35 +248,37 @@ public class TaskManager {
 
     public Task mark(String input, boolean isMarking, FileManager fileManager) throws TomException {
         int index = Integer.parseInt(input.split(" ")[1]) - 1;
-        if (index >= 0 && index < getSize()) {
-            Task task = this.tasks.get(index);
-            if (isMarking) {
-                if (!task.getIsMarked()) {
-                    task.mark();
-                    try {
-                        fileManager.writeToFile(this.tasks);
-                        return task;
-                    } catch (IOException e) {
-                        throw new TomException(e.getMessage() + "Please try again");
-                    }
-                } else {
-                    throw new TomException("Task is already marked.");
-                }
-            } else {
-                if (task.getIsMarked()) {
-                    task.mark();
-                    try {
-                        fileManager.writeToFile(this.tasks);
-                        return task;
-                    } catch (IOException e) {
-                        throw new TomException(e.getMessage() + "Please try again");
-                    }
-                } else {
-                    throw new TomException("Task is already unmarked.");
-                }
+        boolean isValidIndex = index >= 0 && index < getSize();
+
+        if (!isValidIndex) {
+            throw new TomException("Invalid Task. Please check the task number and try again.");
+        }
+
+        Task task = this.tasks.get(index);
+        if (isMarking) {
+            if(task.getIsMarked()) {
+                throw new TomException("Task is already marked.");
+            }
+
+            task.mark();
+            try {
+                fileManager.writeToFile(this.tasks);
+                return task;
+            } catch (IOException e) {
+                throw new TomException(e.getMessage() + "Please try again");
             }
         } else {
-            throw new TomException("Invalid Task. Please check the task number and try again.");
+            if (!task.getIsMarked()) {
+                throw new TomException("Task is already unmarked.");
+            }
+
+            task.mark();
+            try {
+                fileManager.writeToFile(this.tasks);
+                return task;
+            } catch (IOException e) {
+                throw new TomException(e.getMessage() + "Please try again");
+            }
         }
     }
 
@@ -273,18 +299,17 @@ public class TaskManager {
             }
         }
 
-        if (!matchedTasks.isEmpty()) {
-            assert matchedTasks.size() >= 0 : "Matched Task list size should not be negative";
-            String result = "";
-            result = "Tasks matching \"" + desc + "\":\n";
-            for (Task task : matchedTasks) {
-                result += task.toString() + "\n";
-            }
-            return result;
-        } else {
-            assert matchedTasks.size() == 0 : "Matched Task list size should be negative";
+        if (matchedTasks.isEmpty()) {
             return "No tasks found matching \"" + desc + "\".";
+        } 
+
+        assert matchedTasks.size() > 0: "Matched tasks should not be empty here";
+        String result = "";
+        result = "Tasks matching \"" + desc + "\":\n";
+        for (Task task : matchedTasks) {
+            result += task.toString() + "\n";
         }
+        return result;
     }
 
 }

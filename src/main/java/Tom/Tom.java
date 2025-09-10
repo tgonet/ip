@@ -3,9 +3,7 @@ package Tom;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import Tom.CustomUI.DialogBox;
 import Tom.Exception.TomException;
 import Tom.FileManager.FileManager;
 import Tom.Task.Task;
@@ -23,7 +21,7 @@ public class Tom {
             this.ui = new UI();
             this.fileManager = new FileManager(filePath);
             ArrayList<Task> ls = fileManager.getFileContents();
-            this.taskManager = new TaskManager(ls, ui);
+            this.taskManager = new TaskManager(ls);
         } catch (FileNotFoundException e) {
             ui.printError("An Error occured please try again.");
         }
@@ -40,11 +38,9 @@ public class Tom {
         } else if (input.startsWith("mark ")) {
             Task task = this.taskManager.mark(input, true, fileManager);
             return "Nice! I've marked this task as done: " + task.toString();
-
         } else if (input.startsWith("unmark ")) {
             Task task = this.taskManager.mark(input, false, fileManager);
             return "I've unmarked this task as done: " + task.toString();
-
         } else if (input.startsWith("delete ")) {
             Task t = this.taskManager.removeTask(input, fileManager);
             return String.format("Noted. I've removed this task:\n %s \nNow you have %d tasks in the list.", t,
@@ -55,14 +51,10 @@ public class Tom {
             return taskManager.findSimilarDescriptions(input);
         } else {
             assert taskManager.getSize() >= 0 : "TaskManager size should never be negative";
-            if (taskManager.getSize() < 100) {
-                Task task = this.taskManager.addTask(input, fileManager);
-                return String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
-                        task.toString(), this.taskManager.getSize());
-            }
+            Task task = this.taskManager.addTask(input, fileManager);
+            return String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
+                    task.toString(), this.taskManager.getSize());
         }
-
-        return "";
     }
 
     public static void main(String[] args) {
