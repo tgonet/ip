@@ -18,6 +18,7 @@ public class UI {
                 + "  | || | | | |\\/| |\n"
                 + "  | || |_| | |  | |\n"
                 + "  |_| \\___/|_|  |_|\n";
+                
         String message = "Hello from\n" + logo + "\nWhat do u need me to do?";
         return message;
     }
