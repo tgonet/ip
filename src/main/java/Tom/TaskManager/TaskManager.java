@@ -140,7 +140,8 @@ public class TaskManager {
         String task = input.split(" ")[0];
         String[] val;
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+        assert getSize() >= 0 : "Task list size should never be negative";
+        
         if (getSize() >= MAX_SIZE) {
             throw new TomException("Task limit reached. Cannot add more than 100 tasks.");
         }
@@ -229,6 +230,7 @@ public class TaskManager {
             }
             return result;
         } else {
+            assert getSize() == 0 : "Task list size should be zero";
             return "You have not added anything to the list!";
         }
     }
