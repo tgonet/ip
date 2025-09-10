@@ -54,6 +54,7 @@ public class Tom {
         } else if (input.startsWith("find")) {
             return taskManager.findSimilarDescriptions(input);
         } else {
+            assert taskManager.getSize() >= 0 : "TaskManager size should never be negative";
             if (taskManager.getSize() < 100) {
                 Task task = this.taskManager.addTask(input, fileManager);
                 return String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
