@@ -47,4 +47,16 @@ public class ToDo extends Task {
         return t;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ToDo other = (ToDo) obj;
+        return this.getName().equals(other.getName());
+    }
 }

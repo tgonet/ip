@@ -80,4 +80,18 @@ public class Events extends Task {
         }
         return e;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Events other = (Events) obj;
+        return this.getName().equals(other.getName())
+                && this.start.equals(other.start)
+                && this.end.equals(other.end);
+    }
 }

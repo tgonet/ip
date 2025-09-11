@@ -163,6 +163,11 @@ public class TaskManager {
                 }
 
                 Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
+
+                if (isDuplicate(d)) {
+                    throw new TomException("This task already exists in your list. Duplicate tasks are not allowed.");
+                }
+
                 this.tasks.add(d);
                 fileManager.appendToFile(String.format("%s\n", d.toFileString()));
                 return d;
@@ -176,6 +181,11 @@ public class TaskManager {
                 }
 
                 ToDo t = new ToDo(description);
+
+                if (isDuplicate(t)) {
+                    throw new TomException("This task already exists in your list. Duplicate tasks are not allowed.");
+                }
+
                 this.tasks.add(t);
                 fileManager.appendToFile(String.format("%s\n", t.toFileString()));
                 return t;
@@ -200,6 +210,11 @@ public class TaskManager {
 
                 Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
                         LocalDateTime.parse(val2[1].trim(), fmt));
+
+                if (isDuplicate(e)) {
+                    throw new TomException("This task already exists in your list. Duplicate tasks are not allowed.");
+                }        
+
                 this.tasks.add(e);
                 fileManager.appendToFile(String.format("%s\n", e.toFileString()));
                 return e;
@@ -310,6 +325,15 @@ public class TaskManager {
             result += task.toString() + "\n";
         }
         return result;
+    }
+
+    public boolean isDuplicate(Task newTask) {
+        for (Task existingTask : this.tasks) {
+            if (existingTask.equals(newTask)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

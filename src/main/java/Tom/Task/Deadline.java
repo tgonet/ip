@@ -64,4 +64,16 @@ public class Deadline extends Task {
         }
         return d;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Deadline other = (Deadline) obj;
+        return this.getName().equals(other.getName()) && this.deadline.equals(other.deadline);
+    }
 }
