@@ -28,8 +28,37 @@ public class Tom {
     }
 
     /**
-     * Generates a response for the user's chat message.
+     * Processes user input and generates the appropriate response string.
+     * <p>
+     * This method acts as the main command handler for the application. It:
+     * <ul>
+     *     <li>Handles simple commands such as {@code bye} and {@code list}.</li>
+     *     <li>Handles task-related operations such as marking, unmarking, deleting,
+     *         checking occurrences, and finding tasks.</li>
+     *     <li>Adds a new task if the input does not match any known commands.</li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     * Supported commands:
+     * <ul>
+     *     <li>{@code bye} – exits the program.</li>
+     *     <li>{@code list} – displays the task list.</li>
+     *     <li>{@code mark [index]} – marks a task as done.</li>
+     *     <li>{@code unmark [index]} – marks a task as not done.</li>
+     *     <li>{@code delete [index]} – deletes a task.</li>
+     *     <li>{@code occur [yyyy-MM-dd HH:mm]} – checks for tasks occurring at the specified time.</li>
+     *     <li>{@code find [keyword]} – finds tasks with similar descriptions.</li>
+     *     <li>Any other input is treated as a new task to add.</li>
+     * </ul>
+     * </p>
+     *
+     * @param input The user input command string.
+     * @return A string representing the application's response to the user command.
+     * @throws TomException If the command cannot be processed due to invalid input,
+     *                      file I/O errors, or other application-specific issues.
      */
+
     public String getResponse(String input) throws TomException {
         if (input.equals("bye")) {
             return "Bye. Hope to see you again soon!";
@@ -51,7 +80,7 @@ public class Tom {
             return taskManager.findSimilarDescriptions(input);
         } else {
             assert taskManager.getSize() >= 0 : "TaskManager size should never be negative";
-            Task task = this.taskManager.addTask(input, fileManager);
+            Task task = this.taskManager.addTaskProcessor(input, fileManager);
             return String.format("Got it. I've added this task: \n%s \nNow you have %d task in your list",
                     task.toString(), this.taskManager.getSize());
         }

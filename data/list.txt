@@ -1,4 +1,2 @@
-T, ,borrow book
 D, ,return book,12 Mar 2026 12:00 am
 E, ,project meeting,12 Mar 2026 02:00 pm,12 Mar 2026 04:00 pm
-E, ,project meeting,12 Mar 2026 02:00 pm,12 Mar 2026 04:01 pm

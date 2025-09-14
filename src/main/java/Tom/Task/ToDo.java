@@ -47,6 +47,21 @@ public class ToDo extends Task {
         return t;
     }
 
+    /**
+     * Compares this {@code ToDo} object to another object for equality.
+     * <p>
+     * Two {@code ToDo} objects are considered equal if:
+     * <ul>
+     *     <li>They are of the same class.</li>
+     *     <li>Their names (descriptions) are equal.</li>
+     * </ul>
+     * </p>
+     *
+     * @param obj The object to compare with this {@code ToDo}.
+     * @return {@code true} if the specified object is equal to this {@code ToDo};
+     *         {@code false} otherwise.
+     */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

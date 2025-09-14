@@ -81,6 +81,23 @@ public class Events extends Task {
         return e;
     }
 
+    /**
+     * Compares this {@code Events} object to another object for equality.
+     * <p>
+     * Two {@code Events} objects are considered equal if:
+     * <ul>
+     *     <li>They are of the same class.</li>
+     *     <li>Their names are equal.</li>
+     *     <li>Their start times are equal.</li>
+     *     <li>Their end times are equal.</li>
+     * </ul>
+     * </p>
+     *
+     * @param obj The object to compare with this {@code Events}.
+     * @return {@code true} if the specified object is equal to this {@code Events};
+     *         {@code false} otherwise.
+     */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

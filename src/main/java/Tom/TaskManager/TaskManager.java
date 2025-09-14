@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import tom.exception.TomException;
 import tom.filemanager.FileManager;
+import tom.parser.Parser;
 import tom.task.Deadline;
 import tom.task.Events;
 import tom.task.Task;
@@ -27,6 +28,8 @@ import tom.task.ToDo;
 public class TaskManager {
     private ArrayList<Task> tasks;
     private int MAX_SIZE = 100;
+    private DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 
     public TaskManager(ArrayList<Task> taskList) {
         this.tasks = taskList;
@@ -43,22 +46,64 @@ public class TaskManager {
     }
 
     /**
-     * Prints tasks occurring at a specified date and time.
+     * Checks for tasks occurring on the specified date and time based on the user input.
+     * <p>
+     * This method parses the input string into a {@link LocalDateTime}, retrieves all
+     * tasks scheduled on or overlapping with that date and time, and returns a formatted
+     * string describing the activities. If no tasks are found, a message stating there
+     * are no activities is returned.
+     * </p>
      *
-     * @param input Input string containing the date and time, e.g., "occur
-     *              2025-08-30 14:00".
+     * @param input The user input containing the date and time to check, in the format "occur [yyyy-MM-dd HH:mm]".
+     * @return A formatted string listing all activities occurring at the specified date and time,
+     *         or a message indicating no activities exist on that day.
+     * @throws TomException If the input cannot be parsed into a valid date and time
+     *                      (wrong format or missing components).
      */
 
     public String checkOccuringDates(String input) throws TomException {
-        ArrayList<Task> temp = new ArrayList<>();
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         try {
-            String[] s = input.split(" ");
-            String dateTime = s[1] + " " + s[2];
-            LocalDateTime tempDateTime = LocalDateTime.parse(dateTime, fmt);
+            LocalDateTime tempDateTime = Parser.parseCheckRecurringDates(input, FMT);
+            ArrayList<Task> temp = getTasksWithinDate(tempDateTime);
 
-            this.tasks.forEach(t -> {
+            if (temp.size() > 0) {
+                String result = "On " + tempDateTime.format(FMT) + " you have these activities\n:";
+                for (Task g : temp) {
+                    result += g.toString() + "\n";
+                }
+                return result;
+            } else {
+                return "You have no activity on this day";
+            }
+
+        } catch (DateTimeParseException e) {
+            throw new TomException(
+                    "Please enter in this format \"occur [yyyy-MM-dd HH:mm]\"");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new TomException(
+                    "Please enter in this format \"occur [yyyy-MM-dd HH:mm]\"");
+        }
+    }
+
+    /**
+     * Retrieves all tasks scheduled or ongoing at the specified date and time.
+     * <p>
+     * This includes:
+     * <ul>
+     *     <li>Deadlines whose due date equals the specified date and time.</li>
+     *     <li>Events whose start and end times enclose the specified date and time.</li>
+     * </ul>
+     * </p>
+     *
+     * @param tempDateTime The date and time to check for tasks.
+     * @return An {@link ArrayList} of {@link Task} objects occurring at the specified time.
+     */
+
+    public ArrayList<Task> getTasksWithinDate(LocalDateTime tempDateTime) {
+        ArrayList<Task> temp = new ArrayList<>();
+
+        this.tasks.forEach(t -> {
                 boolean isADeadline = t instanceof Deadline;
                 boolean isAEvent = t instanceof Events;
 
@@ -77,23 +122,7 @@ public class TaskManager {
 
             });
 
-            if (temp.size() > 0) {
-                String result = "On " + dateTime + " you have these activities\n:";
-                for (Task g : temp) {
-                    result += g.toString() + "\n";
-                }
-                return result;
-            } else {
-                return "You have no activity on this day";
-            }
-
-        } catch (DateTimeParseException e) {
-            throw new TomException(
-                    "Please enter in this format \"occur [yyyy-MM-dd HH:mm]\"");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new TomException(
-                    "Please enter in this format \"occur [yyyy-MM-dd HH:mm]\"");
-        }
+            return temp;
     }
 
     /**
@@ -135,10 +164,8 @@ public class TaskManager {
      *                      violated.
      */
 
-    public Task addTask(String input, FileManager fileManager) throws TomException {
+    public Task addTaskProcessor(String input, FileManager fileManager) throws TomException {
         String task = input.split(" ")[0];
-        String[] val;
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         assert getSize() >= 0 : "Task list size should never be negative";
 
         if (getSize() >= MAX_SIZE) {
@@ -148,77 +175,24 @@ public class TaskManager {
         try {
             switch (task) {
             case "deadline":
-                if (!input.contains("/by")) {
-                    throw new TomException(
-                            "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
-                }
+                Deadline d = Parser.parseForDeadlineTask(input, FMT);
 
-                val = input.substring(9).trim().split("/by", 2);
-                boolean fieldHasBlanks = val[0].isBlank() || val[1].isBlank();
-
-                if (fieldHasBlanks) {
-                    throw new TomException(
-                            "Please enter in this format \"deadline [description] /by [yyyy-MM-dd HH:mm] \"");
-                }
-
-                Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
-
-                if (isDuplicate(d)) {
-                    throw new TomException(
-                            "This task already exists in your list. Duplicate tasks are not allowed.");
-                }
-
-                this.tasks.add(d);
-                fileManager.appendToFile(String.format("%s\n", d.toFileString()));
+                isDuplicate(d);
+                addTask(d, fileManager);
                 return d;
 
             case "todo":
-                String description = input.substring(4).trim();
+                ToDo t = Parser.parseForToDoTask(input);
 
-                if (description.isBlank()) {
-                    throw new TomException(
-                            "Please enter in this format \"todo [description]\"");
-                }
-
-                ToDo t = new ToDo(description);
-
-                if (isDuplicate(t)) {
-                    throw new TomException(
-                            "This task already exists in your list. Duplicate tasks are not allowed.");
-                }
-
-                this.tasks.add(t);
-                fileManager.appendToFile(String.format("%s\n", t.toFileString()));
+                isDuplicate(t);
+                addTask(t, fileManager);
                 return t;
 
             case "event":
-                val = input.substring(6).trim().split("/from", 2);
-                boolean hasFormatingIssues = !input.contains("/from") || !input.contains("/to");
-                if (hasFormatingIssues) {
-                    throw new TomException(
-                            "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
-                                    + " /to [yyyy-MM-dd HH:mm] \"");
-                }
+                Events e = Parser.parseForEventTask(input, FMT);
 
-                String[] val2 = val[1].split("/to", 2);
-
-                boolean hasBlankFields = val[0].isBlank() || val2[0].isBlank() || val2[1].isBlank();
-                if (hasBlankFields) {
-                    throw new TomException(
-                            "Please enter in this format \"event [description] /from [yyyy-MM-dd HH:mm]"
-                                    + " /to [yyyy-MM-dd HH:mm] \"");
-                }
-
-                Events e = new Events(val[0].trim(), LocalDateTime.parse(val2[0].trim(), fmt),
-                        LocalDateTime.parse(val2[1].trim(), fmt));
-
-                if (isDuplicate(e)) {
-                    throw new TomException(
-                            "This task already exists in your list. Duplicate tasks are not allowed.");
-                }
-
-                this.tasks.add(e);
-                fileManager.appendToFile(String.format("%s\n", e.toFileString()));
+                isDuplicate(e);
+                addTask(e, fileManager);
                 return e;
 
             default:
@@ -229,6 +203,11 @@ public class TaskManager {
         } catch (DateTimeParseException e) {
             throw new TomException("Please follow the format yyyy-MM-dd HH:mm");
         }
+    }
+
+    public void addTask(Task t, FileManager fileManager) throws IOException {
+        this.tasks.add(t);
+        fileManager.appendToFile(String.format("%s\n", t.toFileString()));
     }
 
     /**
@@ -329,13 +308,25 @@ public class TaskManager {
         return result;
     }
 
-    public boolean isDuplicate(Task newTask) {
+    /**
+     * Checks whether the specified task already exists in the task list.
+     * <p>
+     * This method iterates over all existing tasks and compares each one with the
+     * provided task using {@link Task#equals(Object)}. If a duplicate is found, a
+     * {@link TomException} is thrown to prevent adding it.
+     * </p>
+     *
+     * @param newTask The new {@link Task} to be checked against existing tasks.
+     * @throws TomException If the specified task already exists in the list.
+     */
+
+    public void isDuplicate(Task newTask) throws TomException {
         for (Task existingTask : this.tasks) {
             if (existingTask.equals(newTask)) {
-                return true;
+                throw new TomException(
+                            "This task already exists in your list. Duplicate tasks are not allowed.");
             }
         }
-        return false;
     }
 
 }

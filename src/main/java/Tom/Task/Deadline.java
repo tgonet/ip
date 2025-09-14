@@ -65,6 +65,22 @@ public class Deadline extends Task {
         return d;
     }
 
+    /**
+     * Compares this {@code Deadline} to another object for equality.
+     * <p>
+     * Two {@code Deadline} objects are considered equal if:
+     * <ul>
+     *     <li>They are of the same class.</li>
+     *     <li>Their names are equal.</li>
+     *     <li>Their deadline date/times are equal.</li>
+     * </ul>
+     * </p>
+     *
+     * @param obj The object to compare with this {@code Deadline}.
+     * @return {@code true} if the specified object is equal to this {@code Deadline};
+     *         {@code false} otherwise.
+     */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
