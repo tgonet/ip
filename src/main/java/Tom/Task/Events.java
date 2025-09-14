@@ -1,4 +1,4 @@
-package Tom.Task;
+package tom.task;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class Events extends Task {
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
     private LocalDateTime start;
     private LocalDateTime end;
 

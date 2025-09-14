@@ -1,17 +1,17 @@
-package Tom.TaskManager;
+package tom.taskmanager;
 
-import Tom.Exception.TomException;
-import Tom.FileManager.FileManager;
-import Tom.UI.UI;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import tom.exception.TomException;
+import tom.filemanager.FileManager;
 
 public class TaskManagerTest {
-
-    UI ui = new UI();
 
     @Test
     void testCorrectInput() {

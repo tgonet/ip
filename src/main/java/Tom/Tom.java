@@ -1,14 +1,14 @@
 
-package Tom;
+package tom;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import Tom.Exception.TomException;
-import Tom.FileManager.FileManager;
-import Tom.Task.Task;
-import Tom.TaskManager.TaskManager;
-import Tom.UI.UI;
+import tom.exception.TomException;
+import tom.filemanager.FileManager;
+import tom.task.Task;
+import tom.taskmanager.TaskManager;
+import tom.ui.UI;
 
 public class Tom {
 

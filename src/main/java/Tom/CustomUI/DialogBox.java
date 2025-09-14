@@ -1,9 +1,8 @@
-package Tom.CustomUI;
+package tom.customui;
 
 import java.io.IOException;
 import java.util.Collections;
 
-import Tom.MainWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,9 +13,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import tom.MainWindow;
 
 public class DialogBox extends HBox {
-@FXML
+    @FXML
     private Label dialog;
     @FXML
     private ImageView displayPicture;

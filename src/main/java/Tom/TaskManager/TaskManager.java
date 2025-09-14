@@ -1,4 +1,4 @@
-package Tom.TaskManager;
+package tom.taskmanager;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -6,12 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-import Tom.Exception.TomException;
-import Tom.FileManager.FileManager;
-import Tom.Task.Deadline;
-import Tom.Task.Events;
-import Tom.Task.Task;
-import Tom.Task.ToDo;
+import tom.exception.TomException;
+import tom.filemanager.FileManager;
+import tom.task.Deadline;
+import tom.task.Events;
+import tom.task.Task;
+import tom.task.ToDo;
 
 /**
  * Manages a list of {@link Task} objects and provides methods for adding,
@@ -83,8 +83,7 @@ public class TaskManager {
                     result += g.toString() + "\n";
                 }
                 return result;
-            }
-            else {
+            } else {
                 return "You have no activity on this day";
             }
 
@@ -141,7 +140,7 @@ public class TaskManager {
         String[] val;
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         assert getSize() >= 0 : "Task list size should never be negative";
-        
+
         if (getSize() >= MAX_SIZE) {
             throw new TomException("Task limit reached. Cannot add more than 100 tasks.");
         }
@@ -165,7 +164,8 @@ public class TaskManager {
                 Deadline d = new Deadline(val[0].trim(), LocalDateTime.parse(val[1].trim(), fmt));
 
                 if (isDuplicate(d)) {
-                    throw new TomException("This task already exists in your list. Duplicate tasks are not allowed.");
+                    throw new TomException(
+                            "This task already exists in your list. Duplicate tasks are not allowed.");
                 }
 
                 this.tasks.add(d);
@@ -183,7 +183,8 @@ public class TaskManager {
                 ToDo t = new ToDo(description);
 
                 if (isDuplicate(t)) {
-                    throw new TomException("This task already exists in your list. Duplicate tasks are not allowed.");
+                    throw new TomException(
+                            "This task already exists in your list. Duplicate tasks are not allowed.");
                 }
 
                 this.tasks.add(t);
@@ -212,8 +213,9 @@ public class TaskManager {
                         LocalDateTime.parse(val2[1].trim(), fmt));
 
                 if (isDuplicate(e)) {
-                    throw new TomException("This task already exists in your list. Duplicate tasks are not allowed.");
-                }        
+                    throw new TomException(
+                            "This task already exists in your list. Duplicate tasks are not allowed.");
+                }
 
                 this.tasks.add(e);
                 fileManager.appendToFile(String.format("%s\n", e.toFileString()));
@@ -271,7 +273,7 @@ public class TaskManager {
 
         Task task = this.tasks.get(index);
         if (isMarking) {
-            if(task.getIsMarked()) {
+            if (task.getIsMarked()) {
                 throw new TomException("Task is already marked.");
             }
 
@@ -316,9 +318,9 @@ public class TaskManager {
 
         if (matchedTasks.isEmpty()) {
             return "No tasks found matching \"" + desc + "\".";
-        } 
+        }
 
-        assert matchedTasks.size() > 0: "Matched tasks should not be empty here";
+        assert matchedTasks.size() > 0 : "Matched tasks should not be empty here";
         String result = "";
         result = "Tasks matching \"" + desc + "\":\n";
         for (Task task : matchedTasks) {

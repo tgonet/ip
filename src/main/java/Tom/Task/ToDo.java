@@ -1,4 +1,4 @@
-package Tom.Task;
+package tom.task;
 
 /**
  * Represents a task without a specific deadline or duration.

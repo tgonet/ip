@@ -1,4 +1,4 @@
-package Tom.UI;
+package tom.ui;
 
 /**
  * The {@code UI} class provides simple text-based user interface methods for

@@ -1,4 +1,4 @@
-package Tom.Task;
+package tom.task;
 
 /**
  * Represents a general task with a name and a completion status.

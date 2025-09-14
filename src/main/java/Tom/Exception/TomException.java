@@ -1,4 +1,4 @@
-package Tom.Exception;
+package tom.exception;
 
 /**
  * A custom exception class for handling errors specific to the Tom application.

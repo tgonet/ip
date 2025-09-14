@@ -1,4 +1,4 @@
-package Tom;
+package tom;
 
 import javafx.application.Application;
 

@@ -1,4 +1,4 @@
-package Tom.FileManager;
+package tom.filemanager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Tom.Task.Deadline;
-import Tom.Task.Events;
-import Tom.Task.Task;
-import Tom.Task.ToDo;
+import tom.task.Deadline;
+import tom.task.Events;
+import tom.task.Task;
+import tom.task.ToDo;
 
 /**
  * Handles reading from and writing to a file for storing {@link Task} objects.

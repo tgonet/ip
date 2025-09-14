@@ -1,8 +1,5 @@
-package Tom;
+package tom;
 
-import Tom.CustomUI.DialogBox;
-import Tom.Exception.TomException;
-import Tom.UI.UI;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -10,6 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import tom.customui.DialogBox;
+import tom.exception.TomException;
+import tom.ui.UI;
+
 
 /**
  * Controller for the main GUI.
