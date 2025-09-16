@@ -89,4 +89,16 @@ public class TaskManagerTest {
         TomException ex = assertThrows(TomException.class, () -> tm.removeTask(input, fm));
         assertTrue(ex.getMessage().toLowerCase().contains("invalid"));
     }
+
+    // AI Generated Test Case
+    @Test
+    void testAddDuplicateTaskThrows() {
+        String input = "todo read book";
+        TaskManager tm = new TaskManager(new ArrayList<>());
+        FileManager fm = new FileManager("./data/test.txt");
+
+        assertDoesNotThrow(() -> tm.addTaskProcessor(input, fm));
+        TomException ex = assertThrows(TomException.class, () -> tm.addTaskProcessor(input, fm));
+        assertTrue(ex.getMessage().toLowerCase().contains("duplicate"));
+    }
 }
