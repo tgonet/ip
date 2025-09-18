@@ -1,6 +1,6 @@
 # Tom User Guide
 
-![Product Screenshot](/Ui.png)
+![Product Screenshot](docs/Ui.png)
 
 Tom is a task management application that helps you manage your **ToDos**, **Deadlines**, and **Events** efficiently.  
 This guide explains how to add different types of tasks and outlines key features.
