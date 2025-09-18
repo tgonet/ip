@@ -10,14 +10,14 @@ This guide explains how to add different types of tasks and outlines key feature
   - [Adding a todo : `todo`](#adding-ToDos)
   - [Adding a event : `event`](#adding-Events)
   - [View task list : `view`](#view-task-list)
-  - [Editing a person : `edit`](#editing-a-person)
-  - [Mark task : `mark`](#locating-persons-by-name)
-  - [Deleting a person : `delete`](#deleting-a-person)
-  - [Clearing all entries : `clear`](#clearing-all-entries)
-  - [Exiting the program : `exit`](#exiting-the-program)
+  - [Mark task : `mark`](#mark-task)
+  - [Unmark task : `unmark`](#unmark-task)
+  - [Deleting a task : `delete`](#delete-task)
+  - [Find similar task : `find`](#find-similar-task-description)
+  - [Find task on same datetime : `occur`](#find-task-occurring-on-a-particular-datetime)
   - [Saving the data](#saving-the-data)
   - [Editing the data file](#editing-the-data-file)
-  - [Archiving data files `[coming in v2.0]`](#archiving-data-files)
+  - [Exiting the program: `bye`](#exit-the-program)
 
 
 ## Adding deadlines
@@ -90,7 +90,7 @@ Here are the tasks in your list:
 
 ## Mark task
 
-Mark task as completed or unmark them for better tracking the task list
+Mark the task as completed for better tracking of the task list
 
 **Example**
 ```
@@ -101,6 +101,10 @@ mark 1
 ```
 Nice! I've marked this task as done: [D][X] return book (by: 12 Mar 2026 12:00 am)
 ```
+
+## Unmark task
+
+Unmark the task as completed for better tracking of the task list
 
 **Example**
 ```
@@ -156,6 +160,20 @@ occur 2026-03-12 00:00
 ```
 On 2026-03-12 00:00 you have these activities:
 [D][ ] return book (by: 12 Mar 2026 12:00 am)
+```
+
+## Exit the program
+
+Closing the program
+
+**Example**
+```
+bye
+```
+
+**Expected Outcome:**
+```
+Bye. Hope to see you again soon!
 ```
 
 ## Feature Add
