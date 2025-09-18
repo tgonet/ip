@@ -1,23 +1,26 @@
-# Duke User Guide
+# Tom User Guide
 
-// Update the title above to match the actual product name
+![Product Screenshot](docs/Ui.png)
 
-// Product screenshot goes here
-
-// Product intro goes here
+Tom is a task management application that helps you manage your **ToDos**, **Deadlines**, and **Events** efficiently.  
+This guide explains how to add different types of tasks and outlines key features.
 
 ## Adding deadlines
 
-// Describe the action and its outcome.
+Deadlines are tasks that must be done before a specific date/time.  
+Use the `/by` keyword to specify the deadline.
 
-// Give examples of usage
+**Example:**
+```
+deadline return book /by 2026-03-12 00:00
+```
 
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
+**Expected Outcome:**
 
 ```
-expected output
+Got it. I've added this task:
+[D][ ] return book (by: 12 Mar 2026 00:00)
+Now you have X tasks in the list.
 ```
 
 ## Feature ABC
