@@ -16,7 +16,6 @@ This guide explains how to add different types of tasks and outlines key feature
   - [Find similar task : `find`](#find-similar-task-description)
   - [Find task on same datetime : `occur`](#find-task-occurring-on-a-particular-datetime)
   - [Saving the data](#saving-the-data)
-  - [Editing the data file](#editing-the-data-file)
   - [Exiting the program: `bye`](#exit-the-program)
 
 
@@ -161,6 +160,9 @@ occur 2026-03-12 00:00
 On 2026-03-12 00:00 you have these activities:
 [D][ ] return book (by: 12 Mar 2026 12:00 am)
 ```
+
+## Saving the data
+Tom data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
 ## Exit the program
 
